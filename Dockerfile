@@ -21,6 +21,10 @@ FROM node:20.11-slim
 
 WORKDIR /app
 
+# Patch Debian CVEs in the pinned base and drop npm (unused at runtime; its bundled tar is flagged CRITICAL)
+RUN apt-get update && apt-get upgrade -y && rm -rf /var/lib/apt/lists/* \
+ && rm -rf /usr/local/lib/node_modules/npm /usr/local/bin/npm /usr/local/bin/npx
+
 COPY --from=builder /app /app
 
 ENV NODE_ENV=production
